@@ -1,0 +1,45 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: samson-test-web
+  labels:
+    project: samson-test
+    role: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: samson-test
+      role: web
+  template:
+    metadata:
+      labels:
+        project: samson-test
+        role: web
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: samson-test
+        image: 655555973700.dkr.ecr.us-east-1.amazonaws.com/samson-test-project:latest
+        resources:
+          requests:
+            cpu: 50m
+            memory: 32Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: samson-test-web
+  labels:
+    project: samson-test
+    role: web
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    name: http
+    protocol: TCP
+  selector:
+    project: samson-test
+    role: web
